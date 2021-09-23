@@ -1,0 +1,59 @@
+# Default values for hr.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+budget:
+  minAvailable : 1
+
+image:
+  repository: docker.io/anishdhanka/flask-xray
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+AWS_XRAY_DAEMON_ADDRESS : "xray-service.kube-system.svc.cluster.local:2000"
+podAnnotations:
+  date/deploy-date: '{{ now | quote }}'
+  sidecar.istio.io/inject: 'false'
+podSecurityContext: {}
+
+securityContext:
+  privileged: false
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+service:
+  type: ClusterIP
+  port: 5000
+  targetPort: 5000
+
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []

@@ -1,0 +1,11 @@
+{{- if .Values.budget.minAvailable -}}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+    name: {{ include "flask-xray.fullname" . }}
+spec:
+    selector:
+        matchLabels:
+            app.kubernetes.io/name: {{ include "flask-xray.name" . }}
+    minAvailable: {{ .Values.budget.minAvailable }}
+        {{- end -}}
